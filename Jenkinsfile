@@ -1,7 +1,7 @@
-def setBuildStatus(String message, String state) {
+def setBuildStatus(String message, String state, String url) {
   step([
       $class: "GitHubCommitStatusSetter",
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/juntingxiao/test-project.git"],
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: url],
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
@@ -31,6 +31,13 @@ spec:
 
 
     stages {
+      stage('init') {
+            steps{
+                script{
+                    setBuildStatus("Build running", "PENDING", ${env.GIT_URL});
+                }
+            }
+      }        
       stage('alpine') {
             steps{
                 container(name: 'alpine'){
@@ -42,13 +49,15 @@ spec:
                 }
             }
       }
+           
+
     }
     post {
         success {
-            setBuildStatus("Build succeeded", "SUCCESS");
+            setBuildStatus("Build succeeded", "SUCCESS", ${env.GIT_URL});
         }
         failure {
-            setBuildStatus("Build failed", "FAILURE");
+            setBuildStatus("Build failed", "FAILURE", ${env.GIT_URL});
         }
     }   
 }
