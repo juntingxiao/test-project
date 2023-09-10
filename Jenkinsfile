@@ -34,7 +34,7 @@ spec:
       stage('init') {
             steps{
                 script{
-                    setBuildStatus("Build running", "PENDING", ${env.GIT_URL});
+                    setBuildStatus("Build running", "PENDING", "${env.GIT_URL}");
                 }
             }
       }        
@@ -54,10 +54,10 @@ spec:
     }
     post {
         success {
-            setBuildStatus("Build succeeded", "SUCCESS", ${env.GIT_URL});
+            setBuildStatus("Build succeeded", "SUCCESS", "${env.GIT_URL}");
         }
         failure {
-            setBuildStatus("Build failed", "FAILURE", ${env.GIT_URL});
+            setBuildStatus("Build failed", "FAILURE", "${env.GIT_URL}");
         }
     }   
 }
