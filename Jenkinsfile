@@ -39,7 +39,7 @@ spec:
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: "${env.GIT_URL}"],
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: "Build running", state: "PENDING"]] ]
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: "Build testing in stage", state: "PENDING"]] ]
   ])
                     //setBuildStatus("Build running", "PENDING", "${env.GIT_URL}");
                 }
