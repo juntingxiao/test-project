@@ -47,13 +47,22 @@ spec:
       }        
       stage('alpine') {
             steps{
-                container(name: 'alpine'){
-                    sh"""
-                        sleep 60
-                        printenv
-                        echo hellow world
-                    """
-                }
+                    script {
+                        container(name: 'alpine'){
+                            sh"""
+                                sleep 60
+                                printenv
+                                echo hellow world
+                            """
+                        }
+                        step([
+                            $class: "GitHubCommitStatusSetter",
+                            reposSource: [$class: "ManuallyEnteredRepositorySource", url: "${env.GIT_URL}"],
+                            contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status-in-stage"],
+                            errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+                            statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: "Build succeeded in stage", state: "SUCCESS"]] ]
+                        ])
+                    }
             }
       }
            
